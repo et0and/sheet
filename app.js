@@ -1,5 +1,6 @@
 const imageUpload = document.getElementById("image-upload");
 const generateImage = document.getElementById("generate-image");
+const loadingMessage = document.getElementById("loading-message");
 
 function applyExifOrientation(image) {
   return new Promise((resolve) => {
@@ -137,15 +138,17 @@ function readImages(files) {
   return Promise.all(promises).then(() => images);
 }
 
-generateImage.addEventListener("click", () => {
-  if (imageUpload.files.length === 0) {
-    alert("Please select images to upload.");
-    return;
-  }
+generateImage.addEventListener("click", async () => {
+  const files = imageUpload.files;
 
-  readImages(imageUpload.files).then((images) => {
-    generateContactSheet(images);
-  });
+  if (files.length > 0) {
+    loadingMessage.style.display = "block"; // Show loading message
+    const images = await readImages(files);
+    await generateContactSheet(images);
+    loadingMessage.style.display = "none"; // Hide loading message
+  } else {
+    alert("Please upload images before generating a contact sheet.");
+  }
 });
 
       
