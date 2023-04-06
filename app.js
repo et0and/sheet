@@ -57,10 +57,11 @@ async function generateContactSheet(images) {
   const columns = 4;
   const rows = 5;
   const margin = 20;
+  const padding = 10;
   const cellWidth = 200;
   const cellHeight = 150;
-  const width = columns * cellWidth + 2 * margin;
-  const height = rows * cellHeight + 2 * margin;
+  const width = columns * cellWidth + 2 * margin + (columns - 1) * padding;
+  const height = rows * cellHeight + 2 * margin + (rows - 1) * padding;
 
   const canvas = document.createElement("canvas");
   const context = canvas.getContext("2d");
@@ -72,8 +73,8 @@ async function generateContactSheet(images) {
 
   for (let i = 0; i < images.length; i++) {
     const image = images[i];
-    const x = (i % columns) * cellWidth + margin;
-    const y = Math.floor(i / columns) * cellHeight + margin;
+    const x = (i % columns) * (cellWidth + padding) + margin;
+    const y = Math.floor(i / columns) * (cellHeight + padding) + margin;
 
     const aspectRatio = image.width / image.height;
     let newWidth = cellWidth;
@@ -100,7 +101,6 @@ async function generateContactSheet(images) {
   link.download = "contact-sheet.jpg";
   link.click();
 }
-
 
 function readImages(files) {
   const images = [];
