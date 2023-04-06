@@ -1,4 +1,3 @@
-Copy code
 const imageUpload = document.getElementById("image-upload");
 const generateImage = document.getElementById("generate-image");
 
