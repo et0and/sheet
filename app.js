@@ -1,5 +1,58 @@
+Copy code
 const imageUpload = document.getElementById("image-upload");
 const generateImage = document.getElementById("generate-image");
+
+function applyExifOrientation(image) {
+  return new Promise((resolve) => {
+    EXIF.getData(image, function () {
+      const orientation = EXIF.getTag(this, "Orientation");
+      const canvas = document.createElement("canvas");
+      const context = canvas.getContext("2d");
+      let width = image.width;
+      let height = image.height;
+
+      if (orientation && (orientation === 6 || orientation === 8)) {
+        [width, height] = [height, width];
+      }
+
+      canvas.width = width;
+      canvas.height = height;
+
+      switch (orientation) {
+        case 2:
+          context.transform(-1, 0, 0, 1, width, 0);
+          break;
+        case 3:
+          context.transform(-1, 0, 0, -1, width, height);
+          break;
+        case 4:
+          context.transform(1, 0, 0, -1, 0, height);
+          break;
+        case 5:
+          context.transform(0, 1, 1, 0, 0, 0);
+          break;
+        case 6:
+          context.transform(0, 1, -1, 0, height, 0);
+          break;
+        case 7:
+          context.transform(0, -1, -1, 0, height, width);
+          break;
+        case 8:
+          context.transform(0, -1, 1, 0, 0, width);
+          break;
+        default:
+          context.transform(1, 0, 0, 1, 0, 0);
+      }
+
+      context.drawImage(image, 0, 0, image.width, image.height);
+      const correctedImage = new Image();
+      correctedImage.src = canvas.toDataURL();
+      correctedImage.onload = () => {
+        resolve(correctedImage);
+      };
+    });
+  });
+}
 
 async function generateContactSheet(images) {
   const columns = 4;
@@ -41,11 +94,12 @@ function readImages(files) {
       new Promise((resolve) => {
         const reader = new FileReader();
 
-        reader.onload = (e) => {
+        reader.onload = async (e) => {
           const image = new Image();
 
-          image.onload = () => {
-            images.push(image);
+          image.onload = async () => {
+            const correctedImage = await applyExifOrientation(image);
+            images.push(correctedImage);
             resolve();
           };
 
