@@ -3,19 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Contact Sheet Generator</title>
+  <title>Sheets</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
 <body class="bg-gray-100 min-h-screen">
-  <div class="container mx-auto py-10 px-4">
-    <h1 class="text-4xl font-semibold mb-6">Contact Sheet Generator</h1>
-    <div class="space-y-4">
-      <input type="file" id="image-upload" multiple accept="image/*" class="border border-gray-300 p-2 rounded">
-      <button id="generate-image" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded">
-        Generate Contact Sheet
-      </button>
-      <div id="loading-message" class="text-lg text-yellow-600" style="display: none;">
-        Generating contact sheet(s)... Please wait.
+  <div class="flex items-center justify-center min-h-screen">
+    <div class="container mx-auto py-10 px-4">
+      <h1 class="text-4xl font-semibold mb-6">Contact Sheet Generator</h1>
+      <div class="space-y-4">
+        <input type="file" id="image-upload" multiple accept="image/*" class="border border-gray-300 p-2 rounded">
+        <button id="generate-image" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded">
+          Generate Contact Sheet
+        </button>
+        <div id="loading-message" class="text-lg text-yellow-600" style="display: none;">
+          Generating contact sheet(s)... Please wait.
+        </div>
       </div>
     </div>
   </div>
