@@ -62,44 +62,50 @@ async function generateContactSheet(images) {
   const cellHeight = 150;
   const width = columns * cellWidth + 2 * margin + (columns - 1) * padding;
   const height = rows * cellHeight + 2 * margin + (rows - 1) * padding;
+  const maxImagesPerSheet = columns * rows;
 
-  const canvas = document.createElement("canvas");
-  const context = canvas.getContext("2d");
-  canvas.width = width;
-  canvas.height = height;
+  for (let sheetIndex = 0; sheetIndex * maxImagesPerSheet < images.length; sheetIndex++) {
+    const canvas = document.createElement("canvas");
+    const context = canvas.getContext("2d");
+    canvas.width = width;
+    canvas.height = height;
 
-  context.fillStyle = "#FFFFFF";
-  context.fillRect(0, 0, width, height);
+    context.fillStyle = "#FFFFFF";
+    context.fillRect(0, 0, width, height);
 
-  for (let i = 0; i < images.length; i++) {
-    const image = images[i];
-    const x = (i % columns) * (cellWidth + padding) + margin;
-    const y = Math.floor(i / columns) * (cellHeight + padding) + margin;
+    const sheetStartIndex = sheetIndex * maxImagesPerSheet;
+    const sheetEndIndex = Math.min(sheetStartIndex + maxImagesPerSheet, images.length);
 
-    const aspectRatio = image.width / image.height;
-    let newWidth = cellWidth;
-    let newHeight = cellHeight;
+    for (let i = sheetStartIndex; i < sheetEndIndex; i++) {
+      const image = images[i];
+      const x = ((i - sheetStartIndex) % columns) * (cellWidth + padding) + margin;
+      const y = Math.floor((i - sheetStartIndex) / columns) * (cellHeight + padding) + margin;
 
-    if (image.width > image.height) {
-      newHeight = newWidth / aspectRatio;
-    } else {
-      newWidth = newHeight * aspectRatio;
+      const aspectRatio = image.width / image.height;
+      let newWidth = cellWidth;
+      let newHeight = cellHeight;
+
+      if (image.width > image.height) {
+        newHeight = newWidth / aspectRatio;
+      } else {
+        newWidth = newHeight * aspectRatio;
+      }
+
+      context.drawImage(
+        image,
+        x + (cellWidth - newWidth) / 2,
+        y + (cellHeight - newHeight) / 2,
+        newWidth,
+        newHeight
+      );
     }
 
-    context.drawImage(
-      image,
-      x + (cellWidth - newWidth) / 2,
-      y + (cellHeight - newHeight) / 2,
-      newWidth,
-      newHeight
-    );
+    const dataUrl = canvas.toDataURL("image/jpeg");
+    const link = document.createElement("a");
+    link.href = dataUrl;
+    link.download = `contact-sheet-${sheetIndex + 1}.jpg`;
+    link.click();
   }
-
-  const dataUrl = canvas.toDataURL("image/jpeg");
-  const link = document.createElement("a");
-  link.href = dataUrl;
-  link.download = "contact-sheet.jpg";
-  link.click();
 }
 
 function readImages(files) {
