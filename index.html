@@ -2,19 +2,25 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/picnic">
+    <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/exif-js/2.3.0/exif.min.js"></script>
     <script src="app.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contact Sheet Generator - Te Wāhi Auaha</title>
 </head>
 <body>
-
-  <main class="content">
-    <input type="file" id="image-upload" class="button" multiple accept="image/*">
-    <button id="generate-image" class="pseudo">Generate Sheet</button>
-    <div id="loading-message" class="loading" style="display: none;">Generating contact sheet(s)... Please wait.</div>
-  </main>
-   
+  <body class="bg-gray-100 min-h-screen">
+    <div class="container mx-auto py-10 px-4">
+      <h1 class="text-4xl font-semibold mb-6">Contact Sheet Generator</h1>
+      <div class="space-y-4">
+        <input type="file" id="image-upload" multiple accept="image/*" class="border border-gray-300 p-2 rounded">
+        <button id="generate-image" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded">
+          Generate Contact Sheet
+        </button>
+        <div id="loading-message" class="text-lg text-yellow-600" style="display: none;">
+          Generating contact sheet(s)... Please wait.
+        </div>
+      </div>
+    </div>
 </body> 
 </html>
