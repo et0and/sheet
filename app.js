@@ -54,12 +54,12 @@ function applyExifOrientation(image) {
 }
 
 async function generateContactSheet(images) {
-  const columns = 4;
+  const columns = 3;
   const rows = 5;
   const margin = 20;
   const padding = 10;
-  const cellWidth = 200;
-  const cellHeight = 150;
+  const cellWidth = 180;
+  const cellHeight = 120;
   const width = columns * cellWidth + 2 * margin + (columns - 1) * padding;
   const height = rows * cellHeight + 2 * margin + (rows - 1) * padding;
   const maxImagesPerSheet = columns * rows;
