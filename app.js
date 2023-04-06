@@ -54,6 +54,10 @@ function applyExifOrientation(image) {
   });
 }
 
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 async function generateContactSheet(images) {
   const columns = 4;
   const rows = 8;
@@ -109,6 +113,7 @@ async function generateContactSheet(images) {
     link.href = dataUrl;
     link.download = `contact-sheet-${sheetIndex + 1}.jpg`;
     link.click();
+    await sleep(500);
   }
 }
 
