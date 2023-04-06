@@ -1,7 +1,7 @@
 const imageUpload = document.getElementById("image-upload");
 const generatePDF = document.getElementById("generate-pdf");
 
-function generateContactSheet(images) {
+async function generateContactSheet(images) {
   const pdf = new jsPDF({
     orientation: "landscape",
     unit: "pt",
@@ -14,16 +14,26 @@ function generateContactSheet(images) {
   const width = (pdf.internal.pageSize.width - 2 * margin) / columns;
   const height = (pdf.internal.pageSize.height - 2 * margin) / rows;
 
-  images.forEach((image, index) => {
-    const x = (index % columns) * width + margin;
-    const y = Math.floor(index / columns) * height + margin;
+  for (let i = 0; i < images.length; i++) {
+    const image = images[i];
+    const x = (i % columns) * width + margin;
+    const y = Math.floor(i / columns) * height + margin;
 
-    if (index !== 0 && index % (columns * rows) === 0) {
+    if (i !== 0 && i % (columns * rows) === 0) {
       pdf.addPage();
     }
 
-    pdf.addImage(image, "JPEG", x, y, width, height);
-  });
+    await new Promise((resolve) => {
+      const canvas = document.createElement("canvas");
+      const context = canvas.getContext("2d");
+      canvas.width = width;
+      canvas.height = height;
+      context.drawImage(image, 0, 0, width, height);
+      const dataUrl = canvas.toDataURL("image/jpeg");
+      pdf.addImage(dataUrl, "JPEG", x, y, width, height);
+      resolve();
+    });
+  }
 
   pdf.save("contact-sheet.pdf");
 }
