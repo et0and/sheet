@@ -55,21 +55,24 @@ function applyExifOrientation(image) {
 }
 
 async function generateContactSheet(images) {
-  const columns = 4;
-  const rows = 8;
-  const margin = 20;
-  const padding = 20;
-  const cellWidth = 180;
-  const cellHeight = 120;
+  const columns = 3;
+  const rows = 5;
+  const margin = 40; // Increase the margin size
+  const padding = 20; // Increase the padding size
+  const cellWidth = 360; // Increase the cell width
+  const cellHeight = 240; // Increase the cell height
   const width = columns * cellWidth + 2 * margin + (columns - 1) * padding;
   const height = rows * cellHeight + 2 * margin + (rows - 1) * padding;
   const maxImagesPerSheet = columns * rows;
+  const scaleFactor = 2; // Scale factor for increasing resolution
 
   for (let sheetIndex = 0; sheetIndex * maxImagesPerSheet < images.length; sheetIndex++) {
     const canvas = document.createElement("canvas");
     const context = canvas.getContext("2d");
-    canvas.width = width;
-    canvas.height = height;
+    canvas.width = width * scaleFactor; // Scale canvas width
+    canvas.height = height * scaleFactor; // Scale canvas height
+
+    context.scale(scaleFactor, scaleFactor); // Scale the context
 
     context.fillStyle = "#FFFFFF";
     context.fillRect(0, 0, width, height);
