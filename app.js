@@ -74,7 +74,24 @@ async function generateContactSheet(images) {
     const image = images[i];
     const x = (i % columns) * cellWidth + margin;
     const y = Math.floor(i / columns) * cellHeight + margin;
-    context.drawImage(image, x, y, cellWidth, cellHeight);
+
+    const aspectRatio = image.width / image.height;
+    let newWidth = cellWidth;
+    let newHeight = cellHeight;
+
+    if (image.width > image.height) {
+      newHeight = newWidth / aspectRatio;
+    } else {
+      newWidth = newHeight * aspectRatio;
+    }
+
+    context.drawImage(
+      image,
+      x + (cellWidth - newWidth) / 2,
+      y + (cellHeight - newHeight) / 2,
+      newWidth,
+      newHeight
+    );
   }
 
   const dataUrl = canvas.toDataURL("image/jpeg");
@@ -83,6 +100,7 @@ async function generateContactSheet(images) {
   link.download = "contact-sheet.jpg";
   link.click();
 }
+
 
 function readImages(files) {
   const images = [];
