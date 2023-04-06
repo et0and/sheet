@@ -1,49 +1,35 @@
 const imageUpload = document.getElementById("image-upload");
-const generatePDF = document.getElementById("generate-pdf");
+const generateImage = document.getElementById("generate-image");
 
 async function generateContactSheet(images) {
-  const pdf = new jsPDF({
-    orientation: "landscape",
-    unit: "pt",
-    format: "a4",
-  });
-
   const columns = 4;
   const rows = 5;
   const margin = 20;
-  const width = (pdf.internal.pageSize.width - 2 * margin) / columns;
-  const height = (pdf.internal.pageSize.height - 2 * margin) / rows;
+  const cellWidth = 200;
+  const cellHeight = 150;
+  const width = columns * cellWidth + 2 * margin;
+  const height = rows * cellHeight + 2 * margin;
+
+  const canvas = document.createElement("canvas");
+  const context = canvas.getContext("2d");
+  canvas.width = width;
+  canvas.height = height;
+
+  context.fillStyle = "#FFFFFF";
+  context.fillRect(0, 0, width, height);
 
   for (let i = 0; i < images.length; i++) {
     const image = images[i];
-    const x = (i % columns) * width + margin;
-    const y = Math.floor(i / columns) * height + margin;
-
-    if (i !== 0 && i % (columns * rows) === 0) {
-      pdf.addPage();
-    }
-
-    await new Promise((resolve) => {
-      const canvas = document.createElement("canvas");
-      const context = canvas.getContext("2d");
-      canvas.width = width;
-      canvas.height = height;
-      context.drawImage(image, 0, 0, width, height);
-      canvas.toBlob((blob) => {
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          const dataUrl = reader.result;
-          pdf.addImage(dataUrl, "JPEG", x, y, width, height);
-          resolve();
-        };
-        reader.readAsDataURL(blob);
-      }, "image/jpeg");
-    });
+    const x = (i % columns) * cellWidth + margin;
+    const y = Math.floor(i / columns) * cellHeight + margin;
+    context.drawImage(image, x, y, cellWidth, cellHeight);
   }
 
-  const pdfBlob = pdf.output("blob");
-  const objectURL = URL.createObjectURL(pdfBlob);
-  window.open(objectURL, "_blank");
+  const dataUrl = canvas.toDataURL("image/jpeg");
+  const link = document.createElement("a");
+  link.href = dataUrl;
+  link.download = "contact-sheet.jpg";
+  link.click();
 }
 
 function readImages(files) {
@@ -74,7 +60,7 @@ function readImages(files) {
   return Promise.all(promises).then(() => images);
 }
 
-generatePDF.addEventListener("click", () => {
+generateImage.addEventListener("click", () => {
   if (imageUpload.files.length === 0) {
     alert("Please select images to upload.");
     return;
@@ -84,3 +70,6 @@ generatePDF.addEventListener("click", () => {
     generateContactSheet(images);
   });
 });
+
+      
+            
