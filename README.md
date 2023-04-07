@@ -1,5 +1,7 @@
 # sheet
 
+![Screenshot of sheet in action](demo.png)
+
 A simple client-side web app that allows users to upload multiple images and generate contact sheets in a JPEG format. The contact sheets are created with a portrait layout (similar to A4 or letter paper size), and each sheet can accommodate up to 15 images (3 columns x 5 rows).
 
 ## Features
